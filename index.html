@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú | Cordillera Hotel Campestre</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Paleta de Colores "Cordillera" --- */
+        :root {
+            --bg-page: #F4F6F7; /* Blanco niebla */
+            --bg-card: #FFFFFF;
+            --color-title: #344E41; /* Verde bosque oscuro */
+            --color-text: #5A6D6C; /* Gris piedra con tono verde */
+            --color-accent: #A26743; /* Marrón tierra / Terracota */
+            --color-border: #E0E0E0;
+            --color-mountain-1: #DAD7CD; /* Montaña lejana */
+            --color-mountain-2: #A3B18A; /* Montaña media */
+            --color-mountain-3: #6B7B61; /* Montaña cercana */
+            --font-title: 'Playfair Display', serif;
+            --font-body: 'Lato', sans-serif;
+            --shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 10px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Reset y Estilos Base --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-page);
+            background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%" height="100%" filter="url(%23noise)" opacity="0.02"/%3E%3C/svg%3E');
+            color: var(--color-text);
+            line-height: 1.7;
+        }
+
+        /* --- Encabezado con Paisaje Montañoso --- */
+        .main-header {
+            position: relative;
+            text-align: center;
+            /* AJUSTE CLAVE: Se aumentó el padding inferior para subir el texto */
+            padding: 6rem 1rem 12rem;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .main-header h1 {
+            font-family: var(--font-title);
+            font-size: 4rem;
+            color: var(--color-title);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        .main-header h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-text);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInDown 0.8s ease-out 0.2s forwards;
+            margin-top: 0.5rem;
+        }
+        
+        /* Contenedor del paisaje SVG */
+        .mountain-landscape {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            z-index: 1;
+        }
+        
+        /* --- Contenedor Principal del Menú --- */
+        #menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 1.5rem 2rem;
+            background-color: var(--bg-page);
+            position: relative;
+            z-index: 2;
+        }
+
+        .menu-section {
+            margin-bottom: 5rem;
+        }
+
+        /* Divisor de sección con forma de montaña */
+        .section-title-wrapper {
+            text-align: center;
+            margin-bottom: 3.5rem;
+            position: relative;
+        }
+
+        .section-title-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 15px;
+            background: var(--color-mountain-1);
+            opacity: 0.6;
+            clip-path: polygon(0% 100%, 10% 20%, 25% 80%, 40% 30%, 50% 70%, 60% 30%, 75% 80%, 90% 20%, 100% 100%, 0% 100%);
+        }
+        
+        .menu-section h2 {
+            font-family: var(--font-title);
+            font-size: 2.8rem;
+            color: var(--color-title);
+        }
+
+        .section-description {
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 3.5rem;
+            font-size: 1.1rem;
+            font-style: italic;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        /* --- Tarjetas de Producto --- */
+        .menu-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+        
+        .menu-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--color-accent);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            padding-bottom: 1rem;
+        }
+        
+        .menu-card h3 {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--color-title);
+            line-height: 1.4;
+        }
+
+        .menu-card .price {
+            font-family: var(--font-title);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            white-space: nowrap;
+        }
+
+        .menu-card .description {
+            font-size: 0.95rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-border);
+            margin-top: auto;
+        }
+
+        /* --- Pie de página --- */
+        .main-footer {
+            text-align: center;
+            padding: 4rem 1rem 2rem;
+            color: #888;
+            font-size: 0.9rem;
+            background: #fff;
+        }
+
+        /* --- Keyframes --- */
+        @keyframes fadeInDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="main-header-content">
+            <h1>CORDILLERA</h1>
+            <h2>Hotel Campestre</h2>
+        </div>
+        <div class="mountain-landscape">
+            <!-- Paisaje Montañoso SVG Mejorado -->
+            <svg width="100%" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path fill="var(--color-mountain-1)" fill-opacity="1" d="M0,192L48,176C96,160,192,128,288,133.3C384,139,480,181,576,197.3C672,213,768,203,864,181.3C960,160,1056,128,1152,122.7C1248,117,1344,139,1392,149.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                <path fill="var(--color-mountain-2)" fill-opacity="1" d="M0,256L60,229.3C120,203,240,149,360,149.3C480,149,600,203,720,208C840,213,960,171,1080,160C1200,149,1320,171,1380,181.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+                <path fill="var(--color-mountain-3)" fill-opacity="1" d="M0,288L80,266.7C160,245,320,203,480,197.3C640,192,800,224,960,245.3C1120,267,1280,277,1360,282.7L1440,288L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+            </svg>
+        </div>
+    </header>
+
+    <main id="menu-container">
+        <!-- El contenido se generará aquí con JavaScript -->
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 Cordillera Hotel Campestre. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const menuData = {
+              "Pescadería": {
+                "descripcion_general": "Nuestros platos de mar y río vienen con patacón, arroz cremoso y ensalada fresca de la huerta.",
+                "platos": [
+                  { "nombre": "Trucha a la Parrilla", "precio": 36000 },
+                  { "nombre": "Trucha al Ajillo", "precio": 36000 },
+                  { "nombre": "Trucha Marinera", "precio": 48000 },
+                  { "nombre": "Mojarra Frita", "precio": 34000 },
+                  { "nombre": "Cachama Frita", "precio": 34000 },
+                  { "nombre": "Cazuela de Mariscos", "precio": 44000 },
+                  { "nombre": "Cazuela de Trucha con Mariscos", "precio": 48000 },
+                  { "nombre": "Cazuela de Róbalo con Mariscos", "precio": 48000 }
+                ]
+              },
+              "Carnes": {
+                "descripcion_general": "Cortes selectos a la parrilla, servidos con papa criolla artesanal, arroz y ensalada de la cordillera.",
+                "platos": [
+                  { "nombre": "Churrasco Argentino", "precio": 40000, "descripcion": "Corte jugoso de 300g bañado en nuestro chimichurri casero." },
+                  { "nombre": "Churrasco Napolitano", "precio": 42000, "descripcion": "Gratinado con queso Paipa, tomates secos y finas hierbas." },
+                  { "nombre": "Lomo de Cerdo a la Parrilla", "precio": 38000, "descripcion": "Medallones de lomo de cerdo sellados a la perfección." },
+                  { "nombre": "Lomo de Cerdo Hawaiano", "precio": 42000, "descripcion": "Con queso gratinado y trozos de piña caramelizada en casa." },
+                  { "nombre": "Pechuga a la Parrilla", "precio": 38000, "descripcion": "Filete de pechuga de 300g marinado en cítricos y hierbas." },
+                  { "nombre": "Pechuga a la Cordillera", "precio": 44000, "descripcion": "Bañada en una cremosa salsa de champiñones, maíz dulce y tocineta." },
+                  { "nombre": "Pechuga Hawaiana", "precio": 38000, "descripcion": "Gratinada con queso, piña y servida con papa criolla y ensalada." },
+                  { "nombre": "Costillas BBQ", "precio": 38000, "descripcion": "Tiernas costillas de cerdo en nuestra salsa BBQ secreta de la casa." },
+                  { "nombre": "Mixto de Carnes", "precio": 60000, "descripcion": "450g de lomo de res, pechuga, lomo de cerdo y chorizo. Acompañado de papa criolla y patacones." }
+                ]
+              },
+              "Comida Rápidas": {
+                "descripcion_general": "Nuestra selección especial, disponible a partir de las 5:00 PM.",
+                "platos": [
+                  { "nombre": "Picada para dos personas", "precio": 38000, "descripcion": "Lomo fino de res, pechuga, chorizo, cerdo y papa francesa y ensalada." },
+                  { "nombre": "Salchipapa Personal", "precio": 20000, "descripcion": "Salchicha americana, papas a la francesa y ensalada." },
+                  { "nombre": "Choripapa Personal", "precio": 20000, "descripcion": "Chorizo de ternera, papas a la francesa y ensalada." },
+                  { "nombre": "Hamburguesa Clásica", "precio": 22000, "descripcion": "Carne de ternera, papas a la francesa y ensalada." },
+                  { "nombre": "Hamburguesa a la Cordillera", "precio": 28000, "descripcion": "150g de carne de res, 150gr de pechuga, queso mozzarella, vegetales frescos y salsas de la casa." },
+                  { "nombre": "Mazorcada", "precio": 38000, "descripcion": "Maíz salteado con mantequilla, papas fritas, salchicha, carne de res, pechuga, y queso rayado." }
+                ]
+              },
+              "Menú Infantil": {
+                "platos": [
+                  { "nombre": "Mini Pechuga", "precio": 26000, "descripcion": "Acompañado de papa a la francesa y ensalada." },
+                  { "nombre": "Mini Churrasco", "precio": 26000, "descripcion": "Acompañado de papas a la francesa y ensalada." }
+                ]
+              },
+              "Adicionales y Bebidas": {
+                  "platos": [
+                    { "nombre": "Porción de papas a la francesa", "precio": 8000 },
+                    { "nombre": "Porción de patacón", "precio": 8000 },
+                    { "nombre": "Porción de papa criolla", "precio": 8000 },
+                    { "nombre": "Porción de arroz", "precio": 6000 },
+                    { "nombre": "Porción de ensalada", "precio": 6000 },
+                    { "nombre": "Vaso de limonada", "precio": 2000 },
+                    { "nombre": "Jarra de limonada", "precio": 9000 },
+                    { "nombre": "Gaseosas", "precio": 4500 },
+                    { "nombre": "Jugos", "precio": 4500 }
+                ]
+              }
+            };
+            
+            const orderedMenuData = {
+                "Carnes": menuData["Carnes"],
+                "Pescadería": menuData["Pescadería"],
+                "Comida Rápidas": menuData["Comida Rápidas"],
+                "Menú Infantil": menuData["Menú Infantil"],
+                "Adicionales y Bebidas": menuData["Adicionales y Bebidas"],
+            };
+
+            const formatPrice = (price) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(price);
+
+            const menuContainer = document.getElementById('menu-container');
+
+            for (const [category, data] of Object.entries(orderedMenuData)) {
+                const section = document.createElement('section');
+                section.className = 'menu-section';
+                const titleWrapper = document.createElement('div');
+                titleWrapper.className = 'section-title-wrapper';
+                const title = document.createElement('h2');
+                title.textContent = category;
+                titleWrapper.appendChild(title);
+                section.appendChild(titleWrapper);
+
+                if (data.descripcion_general) {
+                    const description = document.createElement('p');
+                    description.className = 'section-description';
+                    description.textContent = data.descripcion_general;
+                    section.appendChild(description);
+                }
+
+                const cardsContainer = document.createElement('div');
+                cardsContainer.className = 'cards-container';
+                
+                data.platos.forEach(plato => {
+                    const card = document.createElement('article');
+                    card.className = 'menu-card';
+                    const cardHeader = document.createElement('div');
+                    cardHeader.className = 'card-header';
+                    const name = document.createElement('h3');
+                    name.textContent = plato.nombre;
+                    const price = document.createElement('span');
+                    price.className = 'price';
+                    price.textContent = formatPrice(plato.precio);
+                    cardHeader.appendChild(name);
+                    cardHeader.appendChild(price);
+                    card.appendChild(cardHeader);
+
+                    if (plato.descripcion) {
+                        const description = document.createElement('p');
+                        description.className = 'description';
+                        description.textContent = plato.descripcion;
+                        card.appendChild(description);
+                    }
+                    cardsContainer.appendChild(card);
+                });
+
+                section.appendChild(cardsContainer);
+                menuContainer.appendChild(section);
+            }
+
+            const cards = document.querySelectorAll('.menu-card');
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => observer.observe(card));
+        });
+    </script>
+</body>
+</html>
